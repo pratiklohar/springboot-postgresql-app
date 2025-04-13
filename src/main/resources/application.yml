@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: springboot-postgresql-app
+
+  datasource:
+      url: "jdbc:mysql://localhost/appdb"
+
+Server:
+  port: 8080
