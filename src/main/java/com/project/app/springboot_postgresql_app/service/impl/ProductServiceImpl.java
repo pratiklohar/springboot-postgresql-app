@@ -1,25 +1,21 @@
 package com.project.app.springboot_postgresql_app.service.impl;
 
-import com.project.app.springboot_postgresql_app.constants.AppConstants;
 import com.project.app.springboot_postgresql_app.constants.ErrorMessages;
 import com.project.app.springboot_postgresql_app.dto.ProductDto;
 import com.project.app.springboot_postgresql_app.exception.ResourceNotFoundException;
 import com.project.app.springboot_postgresql_app.mapper.ProductMapper;
 import com.project.app.springboot_postgresql_app.repository.ProductRepository;
 import com.project.app.springboot_postgresql_app.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    ProductRepository productRepository;
-
-    @Autowired
-    ProductMapper productMapper;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
 
     @Override
@@ -48,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public void deleteProduct(Long id) {
-        if (productRepository.existsById(id)) {
+        if (!productRepository.existsById(id)) {
             throw new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
         }
         productRepository.deleteById(id);
