@@ -24,29 +24,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getProductById(Long id) {
-        return productMapper.toDto(productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND)));
+    public ProductDto getProductById(Integer productId) {
+        return productMapper.toDto(productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND)));
     }
 
     @Override
     public ProductDto addProduct(ProductDto productDto) {
-        if (productDto.getProductId() != null && productRepository.existsById(productDto.getProductId())) {
-            throw new RuntimeException(ErrorMessages.PRODUCT_EXIST);
-        }
         return productMapper.toDto(productRepository.save(productMapper.toEntity(productDto)));
     }
 
     @Override
-    public ProductDto updateProduct(Long id, ProductDto productDto) {
-        var product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
+    public ProductDto updateProduct(Integer productId, ProductDto productDto) {
+        var product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
         productMapper.updateProductFromDto(productDto, product);
         return productMapper.toDto(productRepository.save(product));
     }
     @Override
-    public void deleteProduct(Long id) {
-        if (!productRepository.existsById(id)) {
+    public void deleteProduct(Integer productId) {
+        if (!productRepository.existsById(productId)) {
             throw new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
         }
-        productRepository.deleteById(id);
+        productRepository.deleteById(productId);
     }
 }

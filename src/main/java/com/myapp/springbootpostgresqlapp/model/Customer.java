@@ -19,7 +19,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Maps to SERIAL in PostgreSQL
     @Column(name = "customer_id")
-    private Long customerId;
+    private Integer customerId;
 
     @Column(name = "customer_name", nullable = false)
     private String customerName;

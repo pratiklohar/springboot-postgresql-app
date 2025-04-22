@@ -3,24 +3,25 @@ package com.myapp.springbootpostgresqlapp.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "products")
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
+@Table(name = "products")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private Long productId;
+    private Integer productId;
 
     @Column(name = "product_name", nullable = false)
     private String productName;
 
     @Column(name = "category_id", nullable = false)
-    private Long categoryId;
+    private Integer categoryId;
 
     @Column(name = "price", nullable = false)
     private Double price;
@@ -29,7 +30,7 @@ public class Product {
     private Integer quantity;
 
     @Column(name = "unit_weight", nullable = false)
-    private Double unitWeight;
+    private Integer unitWeight;
 
     @Column(name = "weight_type", nullable = false)
     private String weightType;

@@ -3,7 +3,7 @@ spring:
     name: springboot-postgresql-app
 
   datasource:
-      url: "jdbc:postgresql://localhost/appdb"
+      url: jdbc:postgresql://localhost/appdb
 
 
 Server:
