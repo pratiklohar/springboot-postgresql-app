@@ -10,9 +10,4 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     // Define additional custom queries here if needed
 
-
-    @Override
-    Page<Customer> findAll(Pageable pageable);
-
-
 }
