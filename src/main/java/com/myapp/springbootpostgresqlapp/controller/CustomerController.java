@@ -45,7 +45,7 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{customerId}")
+    @PutMapping("/{customerId}")
     public ResponseEntity<ApiResponse<CustomerDto>> updateCustomer(@PathVariable Integer customerId, @RequestBody CustomerDto customerDto) {
         var updatedProduct = customerService.updateCustomer(customerId, customerDto);
         var response = new ApiResponse<>(

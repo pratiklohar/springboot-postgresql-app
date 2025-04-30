@@ -8,7 +8,9 @@ import com.myapp.springbootpostgresqlapp.repository.ProductRepository;
 import com.myapp.springbootpostgresqlapp.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,23 +35,30 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto addProduct(ProductDto productDto) {
-        if(productRepository.existsByProductNameAndCategoryIdAndUnitWeightAndWeightType(
+        if (productRepository.existsByProductNameAndCategoryIdAndUnitWeightAndWeightType(
                 productDto.productName(),
                 productDto.categoryId(),
                 productDto.unitWeight(),
                 productDto.weightType()
         )) {
             throw new ResourceNotFoundException(ErrorMessages.PRODUCT_EXIST);
-        }else {
+        } else {
             return toDto(productRepository.save(toEntity(productDto)));
         }
     }
 
     @Override
     public ProductDto updateProduct(Integer productId, ProductDto productDto) {
-        var product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
-        productMapper.updateProductFromDto(productDto, product);
-        return productMapper.toDto(productRepository.save(product));
+        var product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
+        Optional.ofNullable(productDto.productName()).ifPresent(product::setProductName);
+        Optional.ofNullable(productDto.categoryId()).ifPresent(product::setCategoryId);
+        Optional.ofNullable(productDto.price()).ifPresent(product::setPrice);
+        Optional.ofNullable(productDto.quantity()).ifPresent(product::setQuantity);
+        Optional.ofNullable(productDto.unitWeight()).ifPresent(product::setUnitWeight);
+        Optional.ofNullable(productDto.weightType()).ifPresent(product::setWeightType);
+        Optional.ofNullable(productDto.packagingType()).ifPresent(product::setPackagingType);
+        return toDto(productRepository.save(product));
     }
 
     @Override
@@ -60,8 +69,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(productId);
     }
 
-// Convert the Product entity to Product DTO
-
+    // Convert the Product entity to Product DTO
     private ProductDto toDto(Product product) {
         return new ProductDto(
                 product.getProductId(),
