@@ -36,4 +36,7 @@ public class Customer {
 
     @Column(name = "state")
     private String state;
+
+    @Column(name = "mobile_number")
+    private String mobileNumber;
 }

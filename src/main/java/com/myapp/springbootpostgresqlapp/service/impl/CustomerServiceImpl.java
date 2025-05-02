@@ -72,7 +72,8 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.getCity(),
                 customer.getPostalCode(),
                 customer.getCountry(),
-                customer.getState()
+                customer.getState(),
+                customer.getMobileNumber()
         );
     }
 
@@ -85,7 +86,8 @@ public class CustomerServiceImpl implements CustomerService {
                 customerDto.city(),
                 customerDto.postalCode(),
                 customerDto.country(),
-                customerDto.state()
+                customerDto.state(),
+                customerDto.mobileNumber()
         );
     }
 
