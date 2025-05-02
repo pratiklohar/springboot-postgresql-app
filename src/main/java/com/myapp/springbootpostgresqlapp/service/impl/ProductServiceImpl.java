@@ -51,13 +51,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto updateProduct(Integer productId, ProductDto productDto) {
         var product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
-        Optional.ofNullable(productDto.productName()).ifPresent(product::setProductName);
-        Optional.ofNullable(productDto.categoryId()).ifPresent(product::setCategoryId);
-        Optional.ofNullable(productDto.price()).ifPresent(product::setPrice);
-        Optional.ofNullable(productDto.quantity()).ifPresent(product::setQuantity);
-        Optional.ofNullable(productDto.unitWeight()).ifPresent(product::setUnitWeight);
-        Optional.ofNullable(productDto.weightType()).ifPresent(product::setWeightType);
-        Optional.ofNullable(productDto.packagingType()).ifPresent(product::setPackagingType);
         return toDto(productRepository.save(product));
     }
 

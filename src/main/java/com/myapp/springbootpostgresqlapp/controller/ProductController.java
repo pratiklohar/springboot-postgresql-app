@@ -1,6 +1,5 @@
 package com.myapp.springbootpostgresqlapp.controller;
 
-import com.myapp.springbootpostgresqlapp.constants.AppConstants;
 import com.myapp.springbootpostgresqlapp.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,7 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success(productService.addProduct(productDto)));
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductDto>> updateProduct(@PathVariable Integer id, @RequestBody ProductDto productDto) {
         return ResponseEntity.ok(ApiResponse.success(productService.updateProduct(id, productDto)));
     }

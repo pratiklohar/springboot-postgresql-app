@@ -42,14 +42,6 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDto updateCustomer(Integer customerId, CustomerDto customerDto) {
         var customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CUSTOMER_NOT_FOUND));
-
-        Optional.ofNullable(customerDto.customerName()).ifPresent(customer::setCustomerName);
-        Optional.ofNullable(customerDto.address()).ifPresent(customer::setAddress);
-        Optional.ofNullable(customerDto.city()).ifPresent(customer::setCity);
-        Optional.ofNullable(customerDto.postalCode()).ifPresent(customer::setPostalCode);
-        Optional.ofNullable(customerDto.country()).ifPresent(customer::setCountry);
-        Optional.ofNullable(customerDto.state()).ifPresent(customer::setState);
-
         return toDto(customerRepository.save(customer));
     }
 
