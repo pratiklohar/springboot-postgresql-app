@@ -1,9 +1,11 @@
 package com.myapp.springbootpostgresqlapp.dto;
 
+import java.util.UUID;
+
 public record OrderDetailDto(
-        Integer orderDetailId,
-        Integer orderId,
-        Integer productId,
+        UUID orderDetailId,
+        UUID orderId,
+        UUID productId,
         Integer quantity
 ) {
 }

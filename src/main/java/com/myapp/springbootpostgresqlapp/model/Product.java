@@ -3,38 +3,38 @@ package com.myapp.springbootpostgresqlapp.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "products")
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private Integer productId;
+    private UUID productId;
 
-    @Column(name = "product_name", nullable = false)
+    @Column(name = "product_name")
     private String productName;
 
-    @Column(name = "category_id", nullable = false)
-    private Integer categoryId;
+    @Column(name = "category_id")
+    private UUID categoryId;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private Double price;
 
-    @Column(name = "quantity", nullable = false)
+    @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "unit_weight", nullable = false)
+    @Column(name = "unit_weight")
     private Integer unitWeight;
 
-    @Column(name = "weight_type", nullable = false)
+    @Column(name = "weight_type")
     private String weightType;
 
-    @Column(name = "packaging_type", nullable = false)
+    @Column(name = "packaging_type")
     private String packagingType;
 }

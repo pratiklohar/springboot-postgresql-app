@@ -6,11 +6,12 @@ import com.myapp.springbootpostgresqlapp.exception.ResourceNotFoundException;
 import com.myapp.springbootpostgresqlapp.model.Product;
 import com.myapp.springbootpostgresqlapp.repository.ProductRepository;
 import com.myapp.springbootpostgresqlapp.service.ProductService;
+import com.myapp.springbootpostgresqlapp.util.IdGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto getProductById(Integer productId) {
+    public ProductDto getProductById(UUID productId) {
         return productRepository.findById(productId)
                 .map(this::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
@@ -35,27 +36,26 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto addProduct(ProductDto productDto) {
-        if (productRepository.existsByProductNameAndCategoryIdAndUnitWeightAndWeightType(
-                productDto.productName(),
-                productDto.categoryId(),
-                productDto.unitWeight(),
-                productDto.weightType()
-        )) {
-            throw new ResourceNotFoundException(ErrorMessages.PRODUCT_EXIST);
-        } else {
-            return toDto(productRepository.save(toEntity(productDto)));
+        if (productRepository.existsByProductNameAndCategoryIdAndUnitWeightAndWeightType(productDto.productName(), productDto.categoryId(), productDto.unitWeight(), productDto.weightType())) {
+            throw new RuntimeException(ErrorMessages.PRODUCT_EXIST);
         }
-    }
-
-    @Override
-    public ProductDto updateProduct(Integer productId, ProductDto productDto) {
-        var product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND));
+        var product = toEntity(productDto);
+        product.setProductId(IdGenerator.generateId());
         return toDto(productRepository.save(product));
     }
 
     @Override
-    public void deleteProduct(Integer productId) {
+    public ProductDto updateProduct(UUID productId, ProductDto productDto) {
+        if (!productRepository.existsById(productId)) {
+            throw new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
+        }
+        var product = toEntity(productDto);
+        product.setProductId(productId);
+        return toDto(productRepository.save(product));
+    }
+
+    @Override
+    public void deleteProduct(UUID productId) {
         if (!productRepository.existsById(productId)) {
             throw new ResourceNotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
         }

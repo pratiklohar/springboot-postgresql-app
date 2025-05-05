@@ -6,11 +6,12 @@ import com.myapp.springbootpostgresqlapp.exception.ResourceNotFoundException;
 import com.myapp.springbootpostgresqlapp.model.Customer;
 import com.myapp.springbootpostgresqlapp.repository.CustomerRepository;
 import com.myapp.springbootpostgresqlapp.service.CustomerService;
+import com.myapp.springbootpostgresqlapp.util.IdGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto getCustomerById(Integer customerId) {
+    public CustomerDto getCustomerById(UUID customerId) {
         return customerRepository.findById(customerId)
                 .map(this::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CUSTOMER_NOT_FOUND));
@@ -35,19 +36,27 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto addCustomer(CustomerDto customerDto) {
-        return toDto(customerRepository.save(toEntity(customerDto)));
+        if (customerRepository.existsByMobileNumber(customerDto.mobileNumber())) {
+            throw new RuntimeException(ErrorMessages.CUSTOMER_EXIST);
+        }
+        var customer = toEntity(customerDto);
+        customer.setCustomerId(IdGenerator.generateId());
+        return toDto(customerRepository.save(customer));
     }
 
     @Override
-    public CustomerDto updateCustomer(Integer customerId, CustomerDto customerDto) {
-        var customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CUSTOMER_NOT_FOUND));
+    public CustomerDto updateCustomer(UUID customerId, CustomerDto customerDto) {
+        if (!customerRepository.existsById(customerId)) {
+            throw new ResourceNotFoundException(ErrorMessages.CUSTOMER_NOT_FOUND);
+        }
+        var customer = toEntity(customerDto);
+        customer.setCustomerId(customerId);
         return toDto(customerRepository.save(customer));
     }
 
 
     @Override
-    public void deleteCustomer(Integer customerId) {
+    public void deleteCustomer(UUID customerId) {
         if (!customerRepository.existsById(customerId)) {
             throw new ResourceNotFoundException(ErrorMessages.CUSTOMER_NOT_FOUND);
         }
@@ -59,7 +68,8 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDto toDto(Customer customer) {
         return new CustomerDto(
                 customer.getCustomerId(),
-                customer.getCustomerName(),
+                customer.getFirstName(),
+                customer.getLastName(),
                 customer.getAddress(),
                 customer.getCity(),
                 customer.getPostalCode(),
@@ -73,7 +83,8 @@ public class CustomerServiceImpl implements CustomerService {
     private Customer toEntity(CustomerDto customerDto) {
         return new Customer(
                 customerDto.customerId(),
-                customerDto.customerName(),
+                customerDto.firstName(),
+                customerDto.lastName(),
                 customerDto.address(),
                 customerDto.city(),
                 customerDto.postalCode(),
